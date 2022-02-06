@@ -8,7 +8,6 @@ const getWordle = () => {
     fetch('/get_word')
         .then(response => response.json())
         .then(json => {
-            console.log(json);
             wordle = json['data'].toUpperCase()
         })
         .catch(err => console.log(err))
