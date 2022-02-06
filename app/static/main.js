@@ -5,10 +5,11 @@ const messageDisplay = document.querySelector('.message-container')
 let wordle
 
 const getWordle = () => {
-    fetch('http://localhost:8000/word')
+    fetch('/get_word')
         .then(response => response.json())
         .then(json => {
-            wordle = json.toUpperCase()
+            console.log(json);
+            wordle = json['data'].toUpperCase()
         })
         .catch(err => console.log(err))
 }
@@ -112,33 +113,24 @@ const deleteLetter = () => {
 
 const checkRow = () => {
     const guess = guessRows[currentRow].join('')
-    if (currentTile > 4) {
-        fetch(`http://localhost:8000/check/?word=${guess}`)
-            .then(response => response.json())
-            .then(json => {
-                if (json == 'Entry word not found') {
-                    showMessage('word not in list')
-                    return
-                } else {
-                    flipTile()
-                    if (wordle == guess) {
-                        showMessage('Magnificent!')
-                        isGameOver = true
-                        return
-                    } else {
-                        if (currentRow >= 5) {
-                            isGameOver = true
-                            showMessage('Game Over')
-                            return
-                        }
-                        if (currentRow < 5) {
-                            currentRow++
-                            currentTile = 0
-                        }
-                    }
-                }
-            }).catch(err => console.log(err))
-    }
+    if (currentTile > 4) {  
+        flipTile()
+        if (wordle == guess) {
+            showMessage('Magnificent!')
+            isGameOver = true
+            return
+        } else {
+            if (currentRow >= 5) {
+                isGameOver = true
+                showMessage('Game Over')
+                return
+            }
+            if (currentRow < 5) {
+                currentRow++
+                currentTile = 0
+            }
+        }
+    }  
 }
 
 const showMessage = (message) => {
