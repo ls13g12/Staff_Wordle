@@ -5,16 +5,16 @@
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
-            {{ form.username.label }}<br>
-            {{ form.username(size=32) }}<br>
-            {% for error in form.username.errors %}
+            {{ form.initials.label }}<br>
+            {{ form.initials(size=32) }}<br>
+            {% for error in form.initials.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ form.initials.label }}<br>
-            {{ form.initials(size=32) }}<br>
-            {% for error in form.initials.errors %}
+            {{ form.nickname.label }}<br>
+            {{ form.nickname(size=32) }}<br>
+            {% for error in form.nickname.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
