@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <ul>
-        {% for today_word_user in today_word_users %}
-        <li>{{today_word_user.user.initials}} got the word {{today_word_user.word.name}} in {{today_word_user.guesses}} guesses!</li>
-        {% endfor %}
-    </ul>
+    <div id="leaderboard">
+
+    </div>
+<script src="static/leaderboard.js"></script>
 
 {% endblock %}

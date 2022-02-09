@@ -1,5 +1,5 @@
 from app import db, login
-from datetime import datetime
+from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -7,7 +7,7 @@ class UserWordLink(db.Model):
     __tablename__ = 'user_word_link'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     word_id = db.Column(db.Integer, db.ForeignKey('word.id'), primary_key=True)
-    datetime = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=date.today())
     guesses = db.Column(db.Integer)
 
     user = db.relationship("User", back_populates="words")
