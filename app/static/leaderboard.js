@@ -11,6 +11,11 @@ async function getLeaderboardDataJSON() {
 
 function initialise_table(){
     let leaderboard_div = document.getElementById('leaderboard')
+    let show_today_button = document.createElement('button')
+    show_today_button.setAttribute('id', 'show-today-button')
+    show_today_button.appendChild(document.createTextNode('Today'))
+    leaderboard_div.appendChild(show_today_button)
+
     let table = document.createElement('table')
 
     for(let i = 1; i <= 6; i++){

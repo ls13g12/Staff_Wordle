@@ -37,12 +37,13 @@ def leaderboard():
 @login_required
 def leaderboard_data():
 
-    todays_date = date.today()
+    days_span = 3
+
+    starting_date = date.today() - timedelta(days = days_span)
     tomorrows_date = date.today() + timedelta(days = 1)
 
-
     #query all users who have completed the word, sorted by number of guesses ascending
-    today_word_users = UserWordLink.query.filter(UserWordLink.date >= todays_date, UserWordLink.date < tomorrows_date
+    today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
     ).join(User).join(Word).order_by(UserWordLink.guesses).all()
 
     return jsonify({'data' : [(today_word_user.user.initials, today_word_user.guesses) for today_word_user in today_word_users]})
