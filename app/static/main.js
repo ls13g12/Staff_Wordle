@@ -9,6 +9,7 @@ const getWordle = () => {
         .then(response => response.json())
         .then(json => {
             wordle = json['data'].toUpperCase()
+            console.log(wordle)
         })
         .catch(err => console.log(err))
 }
@@ -115,7 +116,11 @@ const checkRow = () => {
     if (currentTile > 4) {  
         flipTile()
         if (wordle == guess) {
-            showMessage('Magnificent!')
+
+            let response = update_database(wordle)
+            if (response == 200){
+                showMessage('Well done! - You score has been added')
+            }
             isGameOver = true
             return
         } else {
@@ -174,4 +179,13 @@ const flipTile = () => {
             addColorToKey(guess[index].letter, guess[index].color)
         }, 500 * index)
     })
+}
+
+async function update_database(wordle) {
+    const response = await fetch('/update_database', {
+        method: "POST",
+        body: JSON.stringify(wordle)
+    })
+    let response_data = await response.json()
+    console.log(`Response code is ${response_data.status_code}`)
 }

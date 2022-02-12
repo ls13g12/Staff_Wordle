@@ -1,11 +1,12 @@
+from urllib import response
 from app.models import User, Word, UserWordLink
 from app.main import bp
 from app import db
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, json
 from flask_login import login_required
 from datetime import date, timedelta
-from sqlalchemy import func
 from app.main.words import get_new_word
+import pendulum
 
 @bp.route('/')
 @bp.route('/index')
@@ -27,48 +28,69 @@ def get_word():
 
     return jsonify({'data': new_word})
 
+
 @bp.route('/leaderboard')
 @login_required
 def leaderboard():
-    
     return render_template('leaderboard.html')
 
-@bp.route('/leaderboard_data')
+
+@bp.route('/today_leaderboard_data')
 @login_required
-def leaderboard_data():
-
-    days_span = 3
-
-    starting_date = date.today() - timedelta(days = days_span)
+def today_leaderboard_data():
+    starting_date = date.today()
     tomorrows_date = date.today() + timedelta(days = 1)
 
     #query all users who have completed the word, sorted by number of guesses ascending
     today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
     ).join(User).join(Word).order_by(UserWordLink.guesses).all()
 
-    return jsonify({'data' : [(today_word_user.user.initials, today_word_user.guesses) for today_word_user in today_word_users]})
+    return jsonify({'initials' : [today_word_user.user.initials for today_word_user in today_word_users],
+                    'guesses': [today_word_user.guesses for today_word_user in today_word_users]})
 
-@bp.route('/update_database', methods = ['GET', 'POST'])
+
+@bp.route('/week_leaderboard_data')
 @login_required
-def update_leaderboard():
+def week_leaderboard_data():
+    today = pendulum.now()
+    starting_date = today.start_of('week')
+    print(starting_date)
+    tomorrows_date = date.today() + timedelta(days = 1)
+    print(tomorrows_date)
 
-    #new word currently input by hard coding 
-    new_word = 'paper'
-    guesses = 5
+    #query all users who have completed the word, sorted by number of guesses ascending
+    today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
+    ).join(User).join(Word).order_by(UserWordLink.guesses).all()
 
-    #queries word or adds word to db
-    word = Word.query.filter_by(name=new_word).first()
-    if not word:
-        word = Word(name=new_word)
-        db.session.add(word)
-        db.session.commit()
+    return jsonify({'initials' : [today_word_user.user.initials for today_word_user in today_word_users],
+                    'guesses': [today_word_user.guesses for today_word_user in today_word_users]})
 
-    #query user in db
-    user = User.query.filter_by(initials='ABC').first()
 
-    #query the user_word or adds to the db
-    user_word1 = UserWordLink(user_id=user.id, word_id=word.id, guesses=guesses)
-    if not UserWordLink.query.filter_by(user=user, word=word).first():
-        db.session.add(user_word1)
-        db.session.commit()
+@bp.route('/month_leaderboard_data')
+@login_required
+def month_leaderboard_data():
+    today = pendulum.now()
+    starting_date = today.start_of('month')
+    print(starting_date)
+    tomorrows_date = date.today() + timedelta(days = 1)
+    print(tomorrows_date)
+
+    #query all users who have completed the word, sorted by number of guesses ascending
+    today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
+    ).join(User).join(Word).order_by(UserWordLink.guesses).all()
+
+    return jsonify({'initials' : [today_word_user.user.initials for today_word_user in today_word_users],
+                    'guesses': [today_word_user.guesses for today_word_user in today_word_users]})
+
+@bp.route('/update_database', methods=['GET', 'POST'])
+def update_database():
     
+    req = request.get_json()
+    print(req)
+
+    response_data = {
+        "success": True,
+        "status_code": 200,             
+        }  
+
+    return jsonify(response_data)

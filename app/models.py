@@ -3,6 +3,7 @@ from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+
 class UserWordLink(db.Model):
     __tablename__ = 'user_word_link'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)

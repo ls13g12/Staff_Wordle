@@ -1,9 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div id="leaderboard" class="container">
-
+    <div id="buttons-div" class="container">
+        <button id="today-button" onclick="load_today_chart()">Today</button>
+        <button id="week-button" onclick="load_week_chart()">This Week</button>
+        <button id="month-button" onclick="load_month_chart()">This Month</button>
+        <button>All</button>
     </div>
+    <br>
+    <div id="leaderboard" class="container">
+ 
+        
+        <canvas id="myChart">
+
+        </canvas>
+    </div>
+    
 <script src="static/leaderboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+<style>
+#leaderboard {
+    display: flex;
+   justify-content: center;
+}
+#buttons-div {
+    display: flex;
+    justify-content: center;
+}
+button {
+ padding: 0.8em 1em;
+ width: 140px;
+ border: 2px solid #17C3B2;
+ position: relative;
+ overflow: hidden;
+ background-color: transparent;
+ text-align: center;
+ text-transform: uppercase;
+ font-size: 14px;
+ transition: .3s;
+ z-index: 1;
+ font-family: inherit;
+ color: #17C3B2;
+}
+
+button::before {
+ content: '';
+ width: 0;
+ height: 300%;
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%, -50%) rotate(45deg);
+ background: #17C3B2;
+ transition: .5s ease;
+ display: block;
+ z-index: -1;
+}
+
+button:hover::before {
+ width: 105%;
+}
+
+button:hover {
+ color: #111;
+}
+
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 20%;
+    margin-right: 20%;
+    display: block;
+}
+</style>
 
 {% endblock %}

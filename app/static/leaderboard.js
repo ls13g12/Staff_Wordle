@@ -1,46 +1,121 @@
-initialise_table()
-getLeaderboardDataJSON().then(data => {
-    show_leaderboard(data);
+getTodayLeaderboardDataJSON().then(chart_data => {
+    initialise_chart(chart_data);
 })
 
-async function getLeaderboardDataJSON() {
-    const response = await fetch('/leaderboard_data');
-    const data = await response.json();
-    return data;
-  }
-
-function initialise_table(){
-    let leaderboard_div = document.getElementById('leaderboard')
-    let show_today_button = document.createElement('button')
-    show_today_button.setAttribute('id', 'show-today-button')
-    show_today_button.appendChild(document.createTextNode('Today'))
-    leaderboard_div.appendChild(show_today_button)
-
-    let table = document.createElement('table')
-
-    for(let i = 1; i <= 6; i++){
-        let tr = document.createElement('tr')
-        let id = i+"guess"
-        tr.setAttribute('id', id)
-        let td = document.createElement('td')
-        td.appendChild(document.createTextNode(i))
-        table.appendChild(tr)
-        tr.appendChild(td)
-    }
-    leaderboard_div.appendChild(table)
+function load_today_chart(){
+    getTodayLeaderboardDataJSON().then(chart_data => {
+        update_chart(chart_data);
+    })
 }
 
-function show_leaderboard(data){
-    let users = data.data;
+function load_week_chart(){
+    getWeekLeaderboardDataJSON().then(chart_data => {
+        console.log(chart_data)
+        update_chart(chart_data);
+    })
+}
 
-    for(let i = 0; i < users.length; i++){
-        let user_initials = users[i][0]
-        let user_guesses = users[i][1]
-        let id = user_guesses + "guess"
-        console.log(id)
-        let tr = document.getElementById(id)
-        let td = document.createElement('td')
-        td.appendChild(document.createTextNode(user_initials))
-        tr.appendChild(td)
-    }  
+function load_month_chart(){
+    getMonthLeaderboardDataJSON().then(chart_data => {
+        console.log(chart_data)
+        update_chart(chart_data);
+    })
+}
+
+var config = null
+var myChart = document.getElementById('myChart')
+
+async function getTodayLeaderboardDataJSON() {
+    const response = await fetch('/today_leaderboard_data')
+    const data = await response.json()
+    set_chart_config(data)  
+  }
+
+  async function getWeekLeaderboardDataJSON() {
+    const response = await fetch('/week_leaderboard_data')
+    const data = await response.json()
+    var chart_data = set_chart_config(data) 
+    return chart_data
+  }
+
+  async function getMonthLeaderboardDataJSON() {
+    const response = await fetch('/week_leaderboard_data')
+    const data = await response.json()
+    var chart_data = set_chart_config(data) 
+    return chart_data
+  }
+
+
+
+function initialise_chart(){
+    myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+}
+
+function update_chart(){
+    myChart = Chart.getChart('myChart');
+    if (myChart) {
+        myChart.destroy()
+    }
+    myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+}
+
+function set_chart_config(data){
+    const chart_data = {
+        labels : data.initials,
+        datasets: [{
+            data: data.guesses,
+            backgroundColor: [
+                'rgba(255, 255, 255, 1)'
+            ],
+            barThickness: 20,  // number (pixels) or 'flex'
+            maxBarThickness: 40, // number (pixels)
+            barPercentage: 0.8
+        }]
+    }
+    config = {
+        type: 'bar',
+        data: chart_data,
+        responsive: true,
+        options: {
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins:{
+                legend:{
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Number of Guesses'
+                    },
+
+                    min: 0,
+                    max: 6,
+                    ticks: {
+                        stepSize: 1,
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            }
+        }
+    };
+    return chart_data
+
 }
