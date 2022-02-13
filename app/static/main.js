@@ -116,12 +116,9 @@ const checkRow = () => {
     if (currentTile > 4) {  
         flipTile()
         if (wordle == guess) {
-
             let response = update_database(wordle)
-            if (response == 200){
-                showMessage('Well done! - You score has been added')
-            }
             isGameOver = true
+            showMessage('Well done! - You score has been added')
             return
         } else {
             if (currentRow >= 5) {
@@ -141,7 +138,7 @@ const showMessage = (message) => {
     const messageElement = document.createElement('p')
     messageElement.textContent = message
     messageDisplay.append(messageElement)
-    setTimeout(() => messageDisplay.removeChild(messageElement), 2000)
+    setTimeout(() => messageDisplay.removeChild(messageElement), 10000)
 }
 
 const addColorToKey = (keyLetter, color) => {
@@ -182,10 +179,19 @@ const flipTile = () => {
 }
 
 async function update_database(wordle) {
-    const response = await fetch('/update_database', {
+    let wordle_data = {
+        'wordle': wordle,
+        'guesses': currentRow + 1
+    }
+    let response = await fetch('/update_database', {
         method: "POST",
-        body: JSON.stringify(wordle)
+        credentials: "include",
+        body: JSON.stringify(wordle_data),
+        cache: "no-cache",
+        headers: new Headers({
+          "content-type": "application/json"
+      })
     })
     let response_data = await response.json()
-    console.log(`Response code is ${response_data.status_code}`)
+    return response_data.status_code
 }

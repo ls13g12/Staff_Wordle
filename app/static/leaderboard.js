@@ -1,3 +1,6 @@
+var config = null
+
+
 getTodayLeaderboardDataJSON().then(chart_data => {
     initialise_chart(chart_data);
 })
@@ -10,42 +13,36 @@ function load_today_chart(){
 
 function load_week_chart(){
     getWeekLeaderboardDataJSON().then(chart_data => {
-        console.log(chart_data)
         update_chart(chart_data);
     })
 }
 
 function load_month_chart(){
     getMonthLeaderboardDataJSON().then(chart_data => {
-        console.log(chart_data)
         update_chart(chart_data);
     })
 }
 
-var config = null
-var myChart = document.getElementById('myChart')
-
 async function getTodayLeaderboardDataJSON() {
     const response = await fetch('/today_leaderboard_data')
     const data = await response.json()
-    set_chart_config(data)  
+    var chart_data = set_chart_config(data) 
+    return chart_data 
   }
 
-  async function getWeekLeaderboardDataJSON() {
+async function getWeekLeaderboardDataJSON() {
     const response = await fetch('/week_leaderboard_data')
     const data = await response.json()
     var chart_data = set_chart_config(data) 
     return chart_data
-  }
+}
 
-  async function getMonthLeaderboardDataJSON() {
-    const response = await fetch('/week_leaderboard_data')
+async function getMonthLeaderboardDataJSON() {
+    const response = await fetch('/month_leaderboard_data')
     const data = await response.json()
     var chart_data = set_chart_config(data) 
     return chart_data
-  }
-
-
+}
 
 function initialise_chart(){
     myChart = new Chart(
@@ -66,6 +63,7 @@ function update_chart(){
 }
 
 function set_chart_config(data){
+    set_chart_height(data.initials)
     const chart_data = {
         labels : data.initials,
         datasets: [{
@@ -73,16 +71,17 @@ function set_chart_config(data){
             backgroundColor: [
                 'rgba(255, 255, 255, 1)'
             ],
-            barThickness: 20,  // number (pixels) or 'flex'
-            maxBarThickness: 40, // number (pixels)
-            barPercentage: 0.8
+            dataPointMaxWidth: 20,
+            maxBarThickness: 20, // number (pixels)
+            barPercentage: 0.9
         }]
     }
     config = {
         type: 'bar',
         data: chart_data,
-        responsive: true,
+        height: 20 * data.guesses + 100,
         options: {
+            responsive: true,
             maintainAspectRatio: false,
             indexAxis: 'y',
             plugins:{
@@ -94,14 +93,17 @@ function set_chart_config(data){
                 y: {
                     ticks: {
                         font: {
-                            size: 14
+                            size: 16
                         }
                     }
                 },
                 x: {
                     title: {
                         display: true,
-                        text: 'Number of Guesses'
+                        text: 'Number of Guesses',
+                        font: {
+                            size: 16
+                        }
                     },
 
                     min: 0,
@@ -109,7 +111,7 @@ function set_chart_config(data){
                     ticks: {
                         stepSize: 1,
                         font: {
-                            size: 14
+                            size: 16
                         }
                     }
                 }
@@ -118,4 +120,12 @@ function set_chart_config(data){
     };
     return chart_data
 
+}
+
+
+function set_chart_height(initials){
+    let number_y_values = initials.length
+    let chart_height = number_y_values * 35 + 60
+    let leaderboard_div = document.getElementById('leaderboard')
+    leaderboard_div.style.height = chart_height+"px"
 }

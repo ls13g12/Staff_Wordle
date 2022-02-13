@@ -3,7 +3,7 @@ from app.models import User, Word, UserWordLink
 from app.main import bp
 from app import db
 from flask import Flask, render_template, jsonify, request, json
-from flask_login import login_required
+from flask_login import login_required, current_user
 from datetime import date, timedelta
 from app.main.words import get_new_word
 import pendulum
@@ -54,9 +54,8 @@ def today_leaderboard_data():
 def week_leaderboard_data():
     today = pendulum.now()
     starting_date = today.start_of('week')
-    print(starting_date)
     tomorrows_date = date.today() + timedelta(days = 1)
-    print(tomorrows_date)
+
 
     #query all users who have completed the word, sorted by number of guesses ascending
     today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
@@ -82,11 +81,29 @@ def month_leaderboard_data():
     return jsonify({'initials' : [today_word_user.user.initials for today_word_user in today_word_users],
                     'guesses': [today_word_user.guesses for today_word_user in today_word_users]})
 
-@bp.route('/update_database', methods=['GET', 'POST'])
+@bp.route('/update_database', methods=['POST'])
 def update_database():
     
     req = request.get_json()
-    print(req)
+    word = req['wordle'].lower()
+    guesses = req['guesses']
+    print(word)
+    print(guesses)
+
+    user = User.query.filter_by(id=current_user.id).first()
+
+    word = Word.query.filter_by(name=word).first()
+    if word == None:
+        word = Word(name=word)
+        db.session.add(word)
+        db.session.commit()
+
+    user_word = UserWordLink(user_id=user.id, word_id=word.id, guesses=guesses)
+    user_words = UserWordLink.query.all()
+    
+    if user_word not in user_words:
+        db.session.add(user_word)
+        db.session.commit()
 
     response_data = {
         "success": True,

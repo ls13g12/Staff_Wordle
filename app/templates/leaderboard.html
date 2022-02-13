@@ -8,10 +8,8 @@
         <button>All</button>
     </div>
     <br>
-    <div id="leaderboard" class="container">
- 
-        
-        <canvas id="myChart">
+    <div id="leaderboard" >
+        <canvas id="myChart" width="500px">
 
         </canvas>
     </div>
@@ -23,8 +21,9 @@
 
 <style>
 #leaderboard {
+    height: 400px;
     display: flex;
-   justify-content: center;
+    justify-content: center;
 }
 #buttons-div {
     display: flex;
@@ -68,13 +67,15 @@ button:hover {
  color: #111;
 }
 
-canvas {
+canvas{
+    max-width: 500px;
+    position: absolute;
+    margin: 0 auto;
     padding-left: 0;
     padding-right: 0;
-    margin-left: 20%;
-    margin-right: 20%;
     display: block;
 }
+
 </style>
 
 {% endblock %}
