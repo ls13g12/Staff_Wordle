@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+
     <div id="buttons-div" class="container">
-        <button id="today-button" onclick="load_today_chart()">Today</button>
-        <button id="week-button" onclick="load_week_chart()">This Week</button>
-        <button id="month-button" onclick="load_month_chart()">This Month</button>
-        <button>All</button>
+        <button id="today-button" onclick="load_today_chart()">Today's Results</button>
+        <button id="week-button" onclick="load_week_chart()">Week Average</button>
+        <button id="month-button" onclick="load_month_chart()">Month Average</button>
+        <button id="all-time-button" onclick="load_all_time_chart()">All Time Average</button>
     </div>
+    <div id="chart-title" class="container" >Click to view a leaderboard</div>
     <br>
     <div id="leaderboard" >
+
         <canvas id="myChart" width="500px">
 
         </canvas>
@@ -20,19 +23,29 @@
 
 
 <style>
+#chart-title{
+    font-size: 16px;
+    font-family: inherit;
+    color:#C0FFFF;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
 #leaderboard {
     height: 400px;
     display: flex;
     justify-content: center;
+    padding-right: 40px
 }
 #buttons-div {
     display: flex;
     justify-content: center;
 }
 button {
- padding: 0.8em 1em;
- width: 140px;
- border: 2px solid #17C3B2;
+ padding: 1em 1em;
+ width: 180px;
+ border: 2px solid #C0FFFF;
  position: relative;
  overflow: hidden;
  background-color: transparent;
@@ -42,7 +55,7 @@ button {
  transition: .3s;
  z-index: 1;
  font-family: inherit;
- color: #17C3B2;
+ color: #C0FFFF;
 }
 
 button::before {
@@ -53,7 +66,7 @@ button::before {
  top: 50%;
  left: 50%;
  transform: translate(-50%, -50%) rotate(45deg);
- background: #17C3B2;
+ background: #C0FFFF;
  transition: .5s ease;
  display: block;
  z-index: -1;

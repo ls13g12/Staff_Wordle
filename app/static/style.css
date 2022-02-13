@@ -13,7 +13,6 @@ body {
 }
 
 .game-container {
-    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -71,7 +70,9 @@ body {
 }
 
 .message-container {
-    height: 30px;
+    min-height: 60px;
+    height: 60px;
+    vertical-align: center;
 }
 
 .message-container p {

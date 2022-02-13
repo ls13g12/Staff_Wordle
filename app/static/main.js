@@ -9,7 +9,7 @@ const getWordle = () => {
         .then(response => response.json())
         .then(json => {
             if (json['data'] == null){
-                showMessage('You have completed todays word')
+                showMessage("You have completed today's word! \n Come back tomorrow")
                 isGameOver = true
             }
             else{
@@ -123,13 +123,13 @@ const checkRow = () => {
         if (wordle == guess) {
             update_database(wordle)
             isGameOver = true
-            showMessage('Well done! - You score has been added')
+            showMessage('Well done! Go to the leaderboard page\n to see how you rank')
             return
         } else {
             if (currentRow >= 5) {
                 update_database(wordle)
                 isGameOver = true
-                showMessage('Game Over')
+                showMessage('Game Over! Try again tomorrow')
                 return
             }
             if (currentRow < 5) {
@@ -144,7 +144,7 @@ const showMessage = (message) => {
     const messageElement = document.createElement('p')
     messageElement.textContent = message
     messageDisplay.append(messageElement)
-    setTimeout(() => messageDisplay.removeChild(messageElement), 10000)
+    setTimeout(() => messageDisplay.removeChild(messageElement), 300000)
 }
 
 const addColorToKey = (keyLetter, color) => {

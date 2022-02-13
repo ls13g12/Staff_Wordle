@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container" style= "display: flex; flex-direction: column; align-items: center">
     <h1>Sign In</h1>
     <p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
     <form action="" method="post" novalidate>
@@ -22,4 +23,5 @@
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>
+</div>
 {% endblock %}

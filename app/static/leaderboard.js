@@ -1,13 +1,10 @@
 var config = null
 
-
-getTodayLeaderboardDataJSON().then(chart_data => {
-    initialise_chart(chart_data);
-})
-
 function load_today_chart(){
     getTodayLeaderboardDataJSON().then(chart_data => {
         update_chart(chart_data);
+        var chart_title = document.getElementById('chart-title')
+        chart_title.textContent = "Today's Results"
     })
 }
 
@@ -23,12 +20,18 @@ function load_month_chart(){
     })
 }
 
+function load_all_time_chart(){
+    getAllLeaderboardDataJSON().then(chart_data => {
+        update_chart(chart_data);
+    })
+}
+
 async function getTodayLeaderboardDataJSON() {
     const response = await fetch('/today_leaderboard_data')
     const data = await response.json()
     var chart_data = set_chart_config(data) 
     return chart_data 
-  }
+}
 
 async function getWeekLeaderboardDataJSON() {
     const response = await fetch('/week_leaderboard_data')
@@ -39,6 +42,13 @@ async function getWeekLeaderboardDataJSON() {
 
 async function getMonthLeaderboardDataJSON() {
     const response = await fetch('/month_leaderboard_data')
+    const data = await response.json()
+    var chart_data = set_chart_config(data) 
+    return chart_data
+}
+
+async function getAllLeaderboardDataJSON() {
+    const response = await fetch('/all_leaderboard_data')
     const data = await response.json()
     var chart_data = set_chart_config(data) 
     return chart_data
@@ -69,7 +79,7 @@ function set_chart_config(data){
         datasets: [{
             data: data.guesses,
             backgroundColor: [
-                'rgba(255, 255, 255, 1)'
+                '#C0FFFF'
             ],
             dataPointMaxWidth: 20,
             maxBarThickness: 20, // number (pixels)
@@ -92,6 +102,7 @@ function set_chart_config(data){
             scales: {
                 y: {
                     ticks: {
+                        color: "#C0FFFF",
                         font: {
                             size: 16
                         }
@@ -99,6 +110,7 @@ function set_chart_config(data){
                 },
                 x: {
                     title: {
+                        color: "#C0FFFF",
                         display: true,
                         text: 'Number of Guesses',
                         font: {
@@ -109,9 +121,10 @@ function set_chart_config(data){
                     min: 0,
                     max: 6,
                     ticks: {
+                        color: "#C0FFFF",
                         stepSize: 1,
                         font: {
-                            size: 16
+                            size: 18
                         }
                     }
                 }
@@ -121,7 +134,6 @@ function set_chart_config(data){
     return chart_data
 
 }
-
 
 function set_chart_height(initials){
     let number_y_values = initials.length

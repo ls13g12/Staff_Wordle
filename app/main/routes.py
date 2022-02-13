@@ -8,6 +8,7 @@ from flask_login import login_required, current_user
 from datetime import date, timedelta
 from app.main.words import get_new_word
 import pendulum
+import numpy as np
 
 @bp.route('/')
 @bp.route('/index')
@@ -22,9 +23,8 @@ def check_word_completed_today(word):
     word = Word.query.filter_by(name=word).first()
     user_word = UserWordLink.query.filter(UserWordLink.user_id == user.id, UserWordLink.word_id == word.id, UserWordLink.date >= today).first()
     if user_word: 
-        print('True')
-        return True
 
+        return True
     return False
 
 
@@ -46,8 +46,6 @@ def get_word():
 
         while not is_new_word:
             word = get_new_word()
-            print(word)
-            
             word = Word(name=word)
             word_query = Word.query.filter_by(name=word).first()
             
@@ -90,11 +88,32 @@ def week_leaderboard_data():
 
 
     #query all users who have completed the word, sorted by number of guesses ascending
-    today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
+    week_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
     ).join(User).join(Word).order_by(UserWordLink.guesses).all()
 
-    return jsonify({'initials' : [today_word_user.user.initials for today_word_user in today_word_users],
-                    'guesses': [today_word_user.guesses for today_word_user in today_word_users]})
+    initials_arr, average_guesses_arr = get_user_and_average(week_word_users)
+
+    return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
+
+
+#find average of score for each user
+def get_user_and_average(user_word_link_query):
+    word_users = user_word_link_query
+    user_guesses = {}
+    for word_user in word_users:
+        if word_user.user.initials not in user_guesses:
+            user_guesses.update({word_user.user.initials: [word_user.guesses]})
+        else:
+            user_guesses[word_user.user.initials].append(word_user.guesses)
+
+    average_guesses_arr = []
+    for initials in user_guesses:
+        average_guesses_arr.append([initials, round(np.average(user_guesses[initials]), 2)])
+    
+    average_guesses_arr.sort(key=lambda x:x[1])
+
+    #returns 1D array of initials and 1D array of average guess attempts
+    return [array[0] for array in average_guesses_arr], [array[1] for array in average_guesses_arr]
 
 
 @bp.route('/month_leaderboard_data')
@@ -102,16 +121,25 @@ def week_leaderboard_data():
 def month_leaderboard_data():
     today = pendulum.now()
     starting_date = today.start_of('month')
-    print(starting_date)
     tomorrows_date = date.today() + timedelta(days = 1)
-    print(tomorrows_date)
 
     #query all users who have completed the word, sorted by number of guesses ascending
-    today_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
+    month_word_users = UserWordLink.query.filter(UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
     ).join(User).join(Word).order_by(UserWordLink.guesses).all()
 
-    return jsonify({'initials' : [today_word_user.user.initials for today_word_user in today_word_users],
-                    'guesses': [today_word_user.guesses for today_word_user in today_word_users]})
+    initials_arr, average_guesses_arr = get_user_and_average(month_word_users)
+
+    return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
+
+@bp.route('/all_leaderboard_data')
+@login_required
+def all_leaderboard_data():
+    #query all users
+    all_word_users = UserWordLink.query.all()
+
+    initials_arr, average_guesses_arr = get_user_and_average(all_word_users)
+
+    return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
 
 @bp.route('/update_database', methods=['POST'])
 def update_database():
@@ -119,8 +147,6 @@ def update_database():
     req = request.get_json()
     word = req['wordle'].lower()
     guesses = req['guesses']
-    print(word)
-    print(guesses)
 
     user = User.query.filter_by(id=current_user.id).first()
 
