@@ -9,11 +9,13 @@
             Wordle: 
             <a href="{{ url_for('main.index') }}">Home</a>
             <a href="{{ url_for('main.leaderboard') }}">Leaderboard</a>
+            <span style="float: right">
             {% if current_user.is_anonymous %}
             <a href="{{ url_for('auth.login') }}">Login</a>
             {% else %}
             <a href="{{ url_for('auth.logout') }}">Logout</a>
             {% endif %}
+            </span>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}

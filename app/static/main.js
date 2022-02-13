@@ -8,8 +8,13 @@ const getWordle = () => {
     fetch('/get_word')
         .then(response => response.json())
         .then(json => {
-            wordle = json['data'].toUpperCase()
-            console.log(wordle)
+            if (json['data'] == null){
+                showMessage('You have completed todays word')
+                isGameOver = true
+            }
+            else{
+                wordle = json['data'].toUpperCase()
+            }
         })
         .catch(err => console.log(err))
 }
@@ -116,12 +121,13 @@ const checkRow = () => {
     if (currentTile > 4) {  
         flipTile()
         if (wordle == guess) {
-            let response = update_database(wordle)
+            update_database(wordle)
             isGameOver = true
             showMessage('Well done! - You score has been added')
             return
         } else {
             if (currentRow >= 5) {
+                update_database(wordle)
                 isGameOver = true
                 showMessage('Game Over')
                 return

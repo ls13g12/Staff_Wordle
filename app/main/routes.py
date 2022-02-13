@@ -1,3 +1,4 @@
+from re import I
 from urllib import response
 from app.models import User, Word, UserWordLink
 from app.main import bp
@@ -14,19 +15,50 @@ import pendulum
 def index():
     return render_template('index.html')
 
+
+def check_word_completed_today(word):
+    today = date.today()
+    user = User.query.filter_by(id=current_user.id).first()
+    word = Word.query.filter_by(name=word).first()
+    user_word = UserWordLink.query.filter(UserWordLink.user_id == user.id, UserWordLink.word_id == word.id, UserWordLink.date >= today).first()
+    if user_word: 
+        print('True')
+        return True
+
+    return False
+
+
 @bp.route('/get_word', methods = ["GET","POST"])
+@login_required
 def get_word():
 
-    new_word = get_new_word()
-    print(new_word)
-    
-    word = Word(name=new_word)
-    
-    if not Word.query.filter_by(name=new_word).first():
-        db.session.add(word)
-        db.session.commit()
+    today = date.today()
+    todays_user_word = UserWordLink.query.join(Word).filter(UserWordLink.date >= today).first()
 
-    return jsonify({'data': new_word})
+    if todays_user_word:
+        word = todays_user_word.word.name
+        is_word_completed_today = check_word_completed_today(word)
+        if is_word_completed_today:
+            word = None
+
+    else:
+        is_new_word = False
+
+        while not is_new_word:
+            word = get_new_word()
+            print(word)
+            
+            word = Word(name=word)
+            word_query = Word.query.filter_by(name=word).first()
+            
+            if not word_query:
+                is_new_word = True
+                db.session.add(word)
+                db.session.commit()
+        
+        word = word.name
+
+    return jsonify({'data': word})
 
 
 @bp.route('/leaderboard')
@@ -93,7 +125,7 @@ def update_database():
     user = User.query.filter_by(id=current_user.id).first()
 
     word = Word.query.filter_by(name=word).first()
-    if word == None:
+    if not word:
         word = Word(name=word)
         db.session.add(word)
         db.session.commit()
