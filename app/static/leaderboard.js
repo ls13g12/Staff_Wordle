@@ -1,28 +1,35 @@
 var config = null
 
+function update_chart_title(title){
+    var chart_title = document.getElementById('chart-title')
+    chart_title.textContent = title
+}
+
 function load_today_chart(){
     getTodayLeaderboardDataJSON().then(chart_data => {
         update_chart(chart_data);
-        var chart_title = document.getElementById('chart-title')
-        chart_title.textContent = "Today's Results"
+        update_chart_title("Today's Results")
     })
 }
 
 function load_week_chart(){
     getWeekLeaderboardDataJSON().then(chart_data => {
         update_chart(chart_data);
+        update_chart_title("Average Result This Week")
     })
 }
 
 function load_month_chart(){
     getMonthLeaderboardDataJSON().then(chart_data => {
         update_chart(chart_data);
+        update_chart_title("Average Result This Month")
     })
 }
 
 function load_all_time_chart(){
     getAllLeaderboardDataJSON().then(chart_data => {
         update_chart(chart_data);
+        update_chart_title("All Time Average Result")
     })
 }
 
