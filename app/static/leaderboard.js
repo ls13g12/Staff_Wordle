@@ -131,7 +131,7 @@ function set_chart_config(data){
                         color: "#C0FFFF",
                         stepSize: 1,
                         font: {
-                            size: 18
+                            size: 16
                         }
                     }
                 }

@@ -47,7 +47,7 @@ def get_word():
         while not is_new_word:
             word = get_new_word()
             word = Word(name=word)
-            word_query = Word.query.filter_by(name=word).first()
+            word_query = Word.query.filter_by(name=word.name).first()
             
             if not word_query:
                 is_new_word = True
