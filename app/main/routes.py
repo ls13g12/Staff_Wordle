@@ -1,6 +1,6 @@
 from re import I
 from urllib import response
-from app.models import User, Word, UserWordLink
+from app.models import User, Word, UserWordLink, WordLog
 from app.main import bp
 from app import db
 from flask import Flask, render_template, jsonify, request, json
@@ -16,15 +16,15 @@ import numpy as np
 def index():
     return render_template('index.html')
 
-
 def check_word_completed_today(word):
     today = date.today()
     user = User.query.filter_by(id=current_user.id).first()
     word = Word.query.filter_by(name=word).first()
     user_word = UserWordLink.query.filter(UserWordLink.user_id == user.id, UserWordLink.word_id == word.id, UserWordLink.date >= today).first()
     if user_word: 
-
+        print('True')
         return True
+
     return False
 
 
@@ -32,26 +32,35 @@ def check_word_completed_today(word):
 @login_required
 def get_word():
 
+    #check if there is a stored word in the word log today
     today = date.today()
-    todays_user_word = UserWordLink.query.join(Word).filter(UserWordLink.date >= today).first()
+    todays_word_log = WordLog.query.join(Word).filter(WordLog.date >= today).first()
 
-    if todays_user_word:
-        word = todays_user_word.word.name
+    if todays_word_log:
+        word = todays_word_log.word.name
         is_word_completed_today = check_word_completed_today(word)
         if is_word_completed_today:
             word = None
 
+    #else get new word
     else:
         is_new_word = False
 
+        # while loop to avoid duplicates
         while not is_new_word:
             word = get_new_word()
             word = Word(name=word)
             word_query = Word.query.filter_by(name=word.name).first()
             
+            #if unique word
             if not word_query:
                 is_new_word = True
+                print(word)
+
+                word_log = WordLog(word=word)
+                print(word_log)
                 db.session.add(word)
+                db.session.add(word_log)
                 db.session.commit()
         
         word = word.name

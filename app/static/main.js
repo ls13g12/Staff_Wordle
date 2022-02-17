@@ -129,7 +129,7 @@ const checkRow = () => {
             if (currentRow >= 5) {
                 update_database(wordle)
                 isGameOver = true
-                showMessage('Game Over! Try again tomorrow')
+                showMessage(`Game Over! The word is ${wordle}. Try again tomorrow!`)
                 return
             }
             if (currentRow < 5) {

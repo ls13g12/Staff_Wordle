@@ -38,9 +38,19 @@ class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     users = db.relationship("UserWordLink", back_populates="word")
+    word_log = db.relationship('WordLog', backref='word', lazy='dynamic')
     
     def __repr__(self):
         return '<Word {}>'.format(self.name)
+
+class WordLog(db.Model):
+    __tablename__ = 'word_log'
+    id = db.Column(db.Integer, primary_key=True)
+    word_id = db.Column(db.Integer, db.ForeignKey('word.id'), nullable=True)
+    date = db.Column(db.DateTime, default=date.today())
+    
+    def __repr__(self):
+        return '<Word {} on date {}>'.format(self.word, self.date)
 
 @login.user_loader
 def load_user(id):
