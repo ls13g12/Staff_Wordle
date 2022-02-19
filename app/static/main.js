@@ -156,6 +156,7 @@ const flipTile = () => {
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
     let checkWordle = wordle
     const guess = []
+    const used_letters = new Set()
 
     rowTiles.forEach(tile => {
         guess.push({letter: tile.getAttribute('data'), color: 'grey-overlay'})
@@ -169,8 +170,9 @@ const flipTile = () => {
     })
 
     guess.forEach(guess => {
-        if (checkWordle.includes(guess.letter)) {
+        if (checkWordle.includes(guess.letter) && !used_letters.has(guess.letter)) {
             guess.color = 'yellow-overlay'
+            used_letters.add(guess.letter)
             checkWordle = checkWordle.replace(guess.letter, '')
         }
     })
