@@ -22,7 +22,6 @@ def check_word_completed_today(word):
     word = Word.query.filter_by(name=word).first()
     user_word = UserWordLink.query.filter(UserWordLink.user_id == user.id, UserWordLink.word_id == word.id, UserWordLink.date >= today).first()
     if user_word: 
-        print('True')
         return True
 
     return False
@@ -55,10 +54,7 @@ def get_word():
             #if unique word
             if not word_query:
                 is_new_word = True
-                print(word)
-
                 word_log = WordLog(word=word)
-                print(word_log)
                 db.session.add(word)
                 db.session.add(word_log)
                 db.session.commit()
