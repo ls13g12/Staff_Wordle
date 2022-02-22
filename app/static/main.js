@@ -1,8 +1,34 @@
 const tileDisplay = document.querySelector('.tile-container')
 const keyboard = document.querySelector('.key-container')
 const messageDisplay = document.querySelector('.message-container')
+const messageText = document.querySelector('.message-text')
+let timer
 
 let wordle
+
+const initialise_timer = (time_ms) => {
+    alert("Close when you're ready to start a 6 minute timer")
+    remaining_time = time_ms/1000
+    const timer = setInterval(function(){
+        if(!isGameOver){
+            min_remaining = Math.floor(remaining_time / 60)
+            sec_remaining = remaining_time % 60
+            if (sec_remaining < 10){
+                sec_remaining.toString()
+                sec_remaining = '0' + sec_remaining
+            }
+            showMessage(`${min_remaining} : ${sec_remaining}`)
+            remaining_time -= 1
+            if (remaining_time < 0){
+                clearTimeout(timer)
+                showMessage(`Your time is up! The word was ${wordle}. You scored a 7, sorry :(`)
+                currentRow = 6
+                update_database(wordle)
+            }
+        }
+    }, 1000)
+ 
+}
 
 const getWordle = () => {
     fetch('/get_word')
@@ -14,6 +40,8 @@ const getWordle = () => {
             }
             else{
                 wordle = json['data'].toUpperCase()
+                initialise_timer(360000)
+
             }
         })
         .catch(err => console.log(err))
@@ -127,6 +155,7 @@ const checkRow = () => {
             return
         } else {
             if (currentRow >= 5) {
+                currentRow++
                 update_database(wordle)
                 isGameOver = true
                 showMessage(`Game Over! The word is ${wordle}. Try again tomorrow!`)
@@ -141,10 +170,7 @@ const checkRow = () => {
 }
 
 const showMessage = (message) => {
-    const messageElement = document.createElement('p')
-    messageElement.textContent = message
-    messageDisplay.append(messageElement)
-    setTimeout(() => messageDisplay.removeChild(messageElement), 300000)
+    messageText.textContent = message
 }
 
 const addColorToKey = (keyLetter, color) => {
@@ -156,6 +182,7 @@ const flipTile = () => {
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
     let checkWordle = wordle
     const guess = []
+    const used_letters = new Set()
 
     rowTiles.forEach(tile => {
         guess.push({letter: tile.getAttribute('data'), color: 'grey-overlay'})
@@ -168,9 +195,10 @@ const flipTile = () => {
         }
     })
 
-    guess.forEach(guess => {
-        if (checkWordle.includes(guess.letter)) {
+    guess.forEach((guess, index) => {
+        if (checkWordle.includes(guess.letter) && !used_letters.has(guess.letter) && checkWordle[index] != guess.letter) {
             guess.color = 'yellow-overlay'
+            used_letters.add(guess.letter)
             checkWordle = checkWordle.replace(guess.letter, '')
         }
     })

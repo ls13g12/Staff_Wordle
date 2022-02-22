@@ -75,11 +75,11 @@ body {
     vertical-align: center;
 }
 
-.message-container p {
-    background-color: #818384;
-    border-radius: 10px;
+.message-text {
+    font-size: 18px;
+    border-color: #C0FFFF;
+    border-radius: 8px;
     padding: 10px;
-    margin: 0;
 }
 
 .tile.flip {
