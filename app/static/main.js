@@ -3,7 +3,7 @@ const keyboard = document.querySelector('.key-container')
 const messageDisplay = document.querySelector('.message-container')
 const messageText = document.querySelector('.message-text')
 
-let wordle 
+let wordle
 
 const getWordle = () => {
     fetch('/get_word')
@@ -190,8 +190,8 @@ const flipTile = () => {
     guess.forEach((guess, index) => {
         if (guess.letter == wordle[index]) {
             guess.color = 'green-overlay'
-            checkWordle = checkWordle.replace(guess.letter, '-')
-            checkGuessedWord = checkGuessedWord.replace(guess.letter, '-')
+            checkWordle = checkWordle.substring(0, index) + '-' + checkWordle.substring(index + 1)
+            checkGuessedWord = checkGuessedWord.substring(0, index) + '-' + checkGuessedWord.substring(index + 1)
             guessLetterCount[guess.letter]--
         }
     })
