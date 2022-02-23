@@ -136,6 +136,7 @@ def month_leaderboard_data():
 
     return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
 
+
 @bp.route('/all_leaderboard_data')
 @login_required
 def all_leaderboard_data():
@@ -145,6 +146,7 @@ def all_leaderboard_data():
     initials_arr, average_guesses_arr = get_user_and_average(all_word_users)
 
     return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
+
 
 @bp.route('/update_database', methods=['POST'])
 def update_database():

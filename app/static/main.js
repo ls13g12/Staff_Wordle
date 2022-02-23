@@ -14,7 +14,7 @@ const getWordle = () => {
                 isGameOver = true
             }
             else{
-                showMessage("The timer has been removed. Words must now be real! Enjoy today's wordle!")
+                showMessage("The timer has been removed.  Words must now be real.  Any problems should be fixed.")
                 wordle = json['data'].toUpperCase()
             }
         })
