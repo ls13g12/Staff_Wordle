@@ -14,7 +14,7 @@ const getWordle = () => {
                 isGameOver = true
             }
             else{
-                showMessage("Improved performance on mobile.")
+                showMessage("Enjoy today's wordle!")
                 wordle = json['data'].toUpperCase()
             }
         })
