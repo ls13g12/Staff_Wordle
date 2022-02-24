@@ -10,7 +10,7 @@ const getWordle = () => {
         .then(response => response.json())
         .then(json => {
             if (json['data'] == null){
-                showMessage("You have completed today's word! \n Come back tomorrow")
+                showMessage("You have completed today's word!")
                 isGameOver = true
             }
             else{
