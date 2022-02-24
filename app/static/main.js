@@ -10,17 +10,18 @@ const getWordle = () => {
         .then(response => response.json())
         .then(json => {
             if (json['data'] == null){
-                showMessage("You have completed today's word! \n Come back tomorrow")
+                showMessage("You have completed today's word!")
                 isGameOver = true
             }
             else{
-                showMessage("The timer has been removed.  Words must now be real.  Any problems should be fixed.")
+                showMessage("Enjoy today's wordle!")
                 wordle = json['data'].toUpperCase()
             }
         })
         .catch(err => console.log(err))
 }
 getWordle()
+
 
 const keys = [
     'Q',
@@ -80,6 +81,7 @@ keys.forEach(key => {
     const buttonElement = document.createElement('button')
     buttonElement.textContent = key
     buttonElement.setAttribute('id', key)
+    buttonElement.setAttribute('style', 'text-align:center')
     buttonElement.addEventListener('click', () => handleClick(key))
     keyboard.append(buttonElement)
 })
@@ -95,10 +97,8 @@ const handleClick = (letter) => {
                 checkRow()
                 return
             }
-            else{
-                showMessage("That word is not in the list. Try another word.")
-                return
-            }
+            showMessage('Invalid word. Try another word.')
+            return
         }
         addLetter(letter)
     }
@@ -123,6 +123,7 @@ const deleteLetter = () => {
         tile.setAttribute('data', '')
     }
 }
+
 const checkWord = () => {
     word = ""
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
@@ -132,6 +133,7 @@ const checkWord = () => {
     return isWord(word)
 }
 
+
 const checkRow = () => {
     const guess = guessRows[currentRow].join('')
     if (currentTile > 4) {  
@@ -139,19 +141,20 @@ const checkRow = () => {
         if (wordle == guess) {
             update_database(wordle)
             isGameOver = true
-            showMessage('Well done! Go to the leaderboard page\n to see how you rank')
+            showMessage('Well done! Check the leaderboard.')
             return
         } else {
             if (currentRow >= 5) {
                 currentRow++
                 update_database(wordle)
                 isGameOver = true
-                showMessage(`Game Over! The word is ${wordle}. Try again tomorrow!`)
+                showMessage(`The word is ${wordle}. See you tomorrow!`)
                 return
             }
             if (currentRow < 5) {
                 currentRow++
                 currentTile = 0
+                showMessage('')
             }
         }
     }  

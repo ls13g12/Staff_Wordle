@@ -126,7 +126,7 @@ function set_chart_config(data){
                     },
 
                     min: 0,
-                    max: 6,
+                    max: 7,
                     ticks: {
                         color: "#C0FFFF",
                         stepSize: 1,
