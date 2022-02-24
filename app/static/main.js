@@ -14,7 +14,7 @@ const getWordle = () => {
                 isGameOver = true
             }
             else{
-                showMessage("The timer has been removed.  Words must now be real.  Any problems should be fixed.")
+                showMessage("The timer has been removed.")
                 wordle = json['data'].toUpperCase()
             }
         })
@@ -92,14 +92,8 @@ const handleClick = (letter) => {
             return
         }
         if (letter === 'ENTER') {
-            if(checkWord()){
-                checkRow()
-                return
-            }
-            else{
-                showMessage("That word is not in the list. Try another word.")
-                return
-            }
+            checkRow()
+            return
         }
         addLetter(letter)
     }
@@ -124,6 +118,7 @@ const deleteLetter = () => {
         tile.setAttribute('data', '')
     }
 }
+/*
 const checkWord = () => {
     word = ""
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
@@ -132,6 +127,7 @@ const checkWord = () => {
     })
     return isWord(word)
 }
+*/
 
 const checkRow = () => {
     const guess = guessRows[currentRow].join('')
