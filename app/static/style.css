@@ -140,8 +140,11 @@ body {
         color: #ffffff;
         font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
         'Lucida Sans', Arial, sans-serif;
-        font-size: 16px;
+        font-size: 14px;
     }
+    .disable-dbl-tap-zoom {
+        touch-action: manipulation;
+      }
     
       
       .navbar ul li a {
@@ -171,14 +174,15 @@ body {
     
     .game-container {
         display: flex;
-        width: 90%;
+        width: 100%;
+        height: 90%;
         flex-direction: column;
         align-items: center;
     }
     
     .title-container {
         text-align: center;
-        width: 460px;
+        width: 100%;
         border-bottom: solid 1px #3a3a3c;
     }
     
@@ -188,13 +192,13 @@ body {
     }
     
     .key-container {
-        width: 427px;
+        width: 360px;
         display: flex;
         flex-wrap: wrap;
     }
     
     .key-container button {
-        width: 36px;
+        width: 30px;
         height: 43px;
         border-radius: 4px;
         border: none;
@@ -206,9 +210,12 @@ body {
         margin-left: 25px;
     }
     
-    .key-container button:nth-child(20),
+    .key-container button:nth-child(20)
+    {
+        width: 55px;
+    }
     .key-container button:nth-child(28) {
-        width: 60px;
+        width: 35px;
     }
     
     .tile-container div {
@@ -227,8 +234,7 @@ body {
     }
     
     .message-container {
-        min-height: 60px;
-        height: 60px;
+        height: 40px;
         vertical-align: center;
     }
     
@@ -236,11 +242,10 @@ body {
         font-size: 18px;
         border-color: #000000;
         border-radius: 8px;
-        padding: 10px;
     }
     
     
-    
+
     .tile.flip {
         animation: 0.5s linear flipping;
     }

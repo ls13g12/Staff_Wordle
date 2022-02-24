@@ -3,10 +3,10 @@
 {% block content %}
 
     <div id="buttons-div" class="container">
-        <button id="today-button" onclick="load_today_chart()">Today's Results</button>
-        <button id="week-button" onclick="load_week_chart()">Week Average</button>
-        <button id="month-button" onclick="load_month_chart()">Month Average</button>
-        <button id="all-time-button" onclick="load_all_time_chart()">All Time Average</button>
+        <button class="leaderboard-button" id="today-button" onclick="load_today_chart()">Today's Results</button>
+        <button class="leaderboard-button" id="week-button" onclick="load_week_chart()">Week Average</button>
+        <button class="leaderboard-button" id="month-button" onclick="load_month_chart()">Month Average</button>
+        <button class="leaderboard-button" id="all-time-button" onclick="load_all_time_chart()">All Time Average</button>
     </div>
     <div id="chart-title" class="container" >Click to view a leaderboard</div>
     <br>
@@ -42,7 +42,7 @@
     display: flex;
     justify-content: center;
 }
-button {
+.leaderboard-button {
  padding: 1em 1em;
  width: 180px;
  border: 2px solid #C0FFFF;
@@ -58,7 +58,7 @@ button {
  color: #C0FFFF;
 }
 
-button::before {
+.leaderboard-button::before {
  content: '';
  width: 0;
  height: 300%;
@@ -72,11 +72,11 @@ button::before {
  z-index: -1;
 }
 
-button:hover::before {
+.leaderboard-button:hover::before {
  width: 105%;
 }
 
-button:hover {
+.leaderboard-button:hover {
  color: #111;
 }
 

@@ -81,6 +81,7 @@ keys.forEach(key => {
     const buttonElement = document.createElement('button')
     buttonElement.textContent = key
     buttonElement.setAttribute('id', key)
+    buttonElement.setAttribute('style', 'text-align:center')
     buttonElement.addEventListener('click', () => handleClick(key))
     keyboard.append(buttonElement)
 })
@@ -140,19 +141,20 @@ const checkRow = () => {
         if (wordle == guess) {
             update_database(wordle)
             isGameOver = true
-            showMessage('Well done! Go to the leaderboard page\n to see how you rank')
+            showMessage('Well done! Check the leaderboard.')
             return
         } else {
             if (currentRow >= 5) {
                 currentRow++
                 update_database(wordle)
                 isGameOver = true
-                showMessage(`Game Over! The word is ${wordle}. Try again tomorrow!`)
+                showMessage(`The word is ${wordle}. See you tomorrow!`)
                 return
             }
             if (currentRow < 5) {
                 currentRow++
                 currentTile = 0
+                showMessage('')
             }
         }
     }  
