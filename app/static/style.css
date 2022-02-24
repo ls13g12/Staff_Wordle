@@ -178,7 +178,7 @@ body {
     
     .title-container {
         text-align: center;
-        width: 510px;
+        width: 460px;
         border-bottom: solid 1px #3a3a3c;
     }
     
@@ -194,8 +194,8 @@ body {
     }
     
     .key-container button {
-        width: 43px;
-        height: 58px;
+        width: 35px;
+        height: 43px;
         border-radius: 4px;
         border: none;
         background-color: #818384;
