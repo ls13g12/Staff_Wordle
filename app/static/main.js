@@ -93,12 +93,12 @@ const handleClick = (letter) => {
             return
         }
         if (letter === 'ENTER') {
-            if(checkWord()){
-                checkRow()
-                return
-            }
-            showMessage('Invalid word. Try another word.')
+            //if(checkWord()){
+            checkRow()
             return
+            //}
+            //showMessage('Invalid word. Try another word.')
+            //return
         }
         addLetter(letter)
     }
@@ -236,7 +236,7 @@ async function update_database(wordle) {
     let response_data = await response.json()
     return response_data.status_code
 }
-
+/*
 const wordList = [
     'which',
     'there',
@@ -6004,3 +6004,4 @@ function isWord(word){
     }
     return false
 }
+*/
