@@ -27,7 +27,7 @@ def create_app(config_class=Config):
 
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
-    app.wsgi_app = WhiteNoise(app.wsgi_app, root="static/")
+    app.wsgi_app = WhiteNoise(app.wsgi_app, root="")
 
     return app
 

@@ -113,7 +113,9 @@ def get_user_and_average(user_word_link_query):
 
     average_guesses_arr = []
     for initials in user_guesses:
-        average_guesses_arr.append([initials, round(np.average(user_guesses[initials]), 2)])
+        count = len(user_guesses[initials])
+        initials_and_count = initials + " (" + str(count) + ")"
+        average_guesses_arr.append([initials_and_count, round(np.average(user_guesses[initials]), 2)])
     
     average_guesses_arr.sort(key=lambda x:x[1])
 
