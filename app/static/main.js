@@ -86,19 +86,20 @@ keys.forEach(key => {
     keyboard.append(buttonElement)
 })
 
-const handleClick = (letter) => {
+const handleClick = async (letter) => {
     if (!isGameOver) {
         if (letter === '«') {
             deleteLetter()
             return
         }
         if (letter === 'ENTER') {
-            //if(checkWord()){
-            checkRow()
+            let isWord = await checkWord()
+            if(isWord == true){
+                checkRow()
+                return
+            }
+            showMessage('Invalid word. Try another word.')
             return
-            //}
-            //showMessage('Invalid word. Try another word.')
-            //return
         }
         addLetter(letter)
     }
@@ -124,13 +125,27 @@ const deleteLetter = () => {
     }
 }
 
-const checkWord = () => {
+async function checkWord(){
     word = ""
     const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
     rowTiles.forEach(tile => {
         word += tile.getAttribute('data')
     })
-    return isWord(word)
+    var isWordBool = await fetch('/is_word', {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({'word': word}),
+        cache: "no-cache",
+        headers: new Headers({
+          "content-type": "application/json"
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+        isWordBool = data.data
+        return isWordBool
+    })
+    return isWordBool
 }
 
 

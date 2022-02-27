@@ -1,4 +1,5 @@
 from re import I
+import re
 from urllib import response
 from app.models import User, Word, UserWordLink, WordLog
 from app.main import bp
@@ -7,6 +8,7 @@ from flask import Flask, render_template, jsonify, request, json
 from flask_login import login_required, current_user
 from datetime import date, timedelta
 from app.main.words import get_new_word
+import app.main.fullwordlist as fullwordlist
 import pendulum
 import numpy as np
 
@@ -63,6 +65,15 @@ def get_word():
 
     return jsonify({'data': word})
 
+
+@bp.route('/is_word', methods = ["GET","POST"])
+@login_required
+def is_word():
+    req = request.get_json()
+    word = req['word'].lower()
+    is_word_bool = fullwordlist.is_word(word)
+
+    return jsonify({'data': is_word_bool})
 
 @bp.route('/leaderboard')
 @login_required
