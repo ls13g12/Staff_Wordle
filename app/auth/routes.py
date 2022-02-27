@@ -13,7 +13,7 @@ def login():
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(initials=form.initials.data).first()
+        user = User.query.filter_by(initials=form.initials.data.upper()).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('auth.login'))
@@ -35,7 +35,7 @@ def register():
         return redirect(url_for('main.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(nickname=form.nickname.data, initials=form.initials.data)
+        user = User(nickname=form.nickname.data, initials=form.initials.data.upper())
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()

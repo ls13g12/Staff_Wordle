@@ -1,4 +1,5 @@
 from re import I
+import re
 from urllib import response
 from app.models import User, Word, UserWordLink, WordLog
 from app.main import bp
@@ -7,6 +8,7 @@ from flask import Flask, render_template, jsonify, request, json
 from flask_login import login_required, current_user
 from datetime import date, timedelta
 from app.main.words import get_new_word
+import app.main.fullwordlist as fullwordlist
 import pendulum
 import numpy as np
 
@@ -22,7 +24,6 @@ def check_word_completed_today(word):
     word = Word.query.filter_by(name=word).first()
     user_word = UserWordLink.query.filter(UserWordLink.user_id == user.id, UserWordLink.word_id == word.id, UserWordLink.date >= today).first()
     if user_word: 
-        print('True')
         return True
 
     return False
@@ -55,10 +56,7 @@ def get_word():
             #if unique word
             if not word_query:
                 is_new_word = True
-                print(word)
-
                 word_log = WordLog(word=word)
-                print(word_log)
                 db.session.add(word)
                 db.session.add(word_log)
                 db.session.commit()
@@ -67,6 +65,15 @@ def get_word():
 
     return jsonify({'data': word})
 
+
+@bp.route('/is_word', methods = ["GET","POST"])
+@login_required
+def is_word():
+    req = request.get_json()
+    word = req['word'].lower()
+    is_word_bool = fullwordlist.is_word(word)
+
+    return jsonify({'data': is_word_bool})
 
 @bp.route('/leaderboard')
 @login_required
@@ -117,7 +124,9 @@ def get_user_and_average(user_word_link_query):
 
     average_guesses_arr = []
     for initials in user_guesses:
-        average_guesses_arr.append([initials, round(np.average(user_guesses[initials]), 2)])
+        count = len(user_guesses[initials])
+        initials_and_count = initials + " (" + str(count) + ")"
+        average_guesses_arr.append([initials_and_count, round(np.average(user_guesses[initials]), 2)])
     
     average_guesses_arr.sort(key=lambda x:x[1])
 
@@ -140,6 +149,7 @@ def month_leaderboard_data():
 
     return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
 
+
 @bp.route('/all_leaderboard_data')
 @login_required
 def all_leaderboard_data():
@@ -149,6 +159,7 @@ def all_leaderboard_data():
     initials_arr, average_guesses_arr = get_user_and_average(all_word_users)
 
     return jsonify({'initials' : initials_arr, 'guesses': average_guesses_arr})
+
 
 @bp.route('/update_database', methods=['POST'])
 def update_database():
