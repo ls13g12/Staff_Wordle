@@ -6,59 +6,38 @@ function update_chart_title(title){
 }
 
 function load_today_chart(){
-    getTodayLeaderboardDataJSON().then(chart_data => {
+    getLeaderboardDataJSON('today').then(chart_data => {
         update_chart(chart_data);
         update_chart_title("Today's Results")
     })
 }
 
 function load_week_chart(){
-    getWeekLeaderboardDataJSON().then(chart_data => {
+    getLeaderboardDataJSON('week').then(chart_data => {
         update_chart(chart_data);
         update_chart_title("Average Result This Week")
     })
 }
 
 function load_month_chart(){
-    getMonthLeaderboardDataJSON().then(chart_data => {
+    getLeaderboardDataJSON('month').then(chart_data => {
         update_chart(chart_data);
         update_chart_title("Average Result This Month")
     })
 }
 
 function load_all_time_chart(){
-    getAllLeaderboardDataJSON().then(chart_data => {
+    getLeaderboardDataJSON().then(chart_data => {
         update_chart(chart_data);
         update_chart_title("All Time Average Result")
     })
 }
 
-async function getTodayLeaderboardDataJSON() {
-    const response = await fetch('/today_leaderboard_data')
+async function getLeaderboardDataJSON(filter=null) {
+    const response = await fetch(`/api/leaderboard?filter=${filter}`)
     const data = await response.json()
     var chart_data = set_chart_config(data) 
     return chart_data 
-}
-
-async function getWeekLeaderboardDataJSON() {
-    const response = await fetch('/week_leaderboard_data')
-    const data = await response.json()
-    var chart_data = set_chart_config(data) 
-    return chart_data
-}
-
-async function getMonthLeaderboardDataJSON() {
-    const response = await fetch('/month_leaderboard_data')
-    const data = await response.json()
-    var chart_data = set_chart_config(data) 
-    return chart_data
-}
-
-async function getAllLeaderboardDataJSON() {
-    const response = await fetch('/all_leaderboard_data')
-    const data = await response.json()
-    var chart_data = set_chart_config(data) 
-    return chart_data
 }
 
 function initialise_chart(){
