@@ -1,12 +1,11 @@
 from app.models import User, Word, UserWordLink, WordLog
 from app.main import bp
 from app import db
-from flask import Flask, render_template, jsonify, request, json
+from flask import render_template, jsonify, request
 from flask_login import login_required, current_user
 from datetime import date, timedelta
 from app.main.words import get_new_word
 import app.main.fullwordlist as fullwordlist
-import pendulum
 import numpy as np
 
 

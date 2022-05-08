@@ -75,7 +75,6 @@ function set_chart_config(data){
     config = {
         type: 'bar',
         data: chart_data,
-        height: 20 * data.guesses + 100,
         options: {
             responsive: true,
             maintainAspectRatio: false,
@@ -123,7 +122,7 @@ function set_chart_config(data){
 
 function set_chart_height(initials){
     let number_y_values = initials.length
-    let chart_height = number_y_values * 35 + 60
+    let chart_height = number_y_values * 30 + 120
     let leaderboard_div = document.getElementById('leaderboard')
     leaderboard_div.style.height = chart_height+"px"
 }

@@ -11,13 +11,14 @@ import numpy as np
 @bp.route("/api/leaderboard/", methods=["GET"])
 @login_required
 def leaderboard_api():
+    #filtered by time interval with strings such as today, day, week, month
     filter = request.args["filter"]
 
     if filter == "today":
         starting_date = date.today()
         tomorrows_date = date.today() + timedelta(days=1)
 
-        # query all users who have completed the word, sorted by number of guesses ascending
+        # query all users who have completed the word today, sorted by number of guesses ascending
         word_users = (
             UserWordLink.query.filter(
                 UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
@@ -30,10 +31,10 @@ def leaderboard_api():
 
     elif filter == "week":
         today = pendulum.now()
+        #pendulum method to return start of week date
         starting_date = today.start_of("week")
         tomorrows_date = date.today() + timedelta(days=1)
 
-        # query all users who have completed the word, sorted by number of guesses ascending
         word_users = (
             UserWordLink.query.filter(
                 UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
@@ -48,8 +49,6 @@ def leaderboard_api():
         today = pendulum.now()
         starting_date = today.start_of("month")
         tomorrows_date = date.today() + timedelta(days=1)
-
-        # query all users who have completed the word, sorted by number of guesses ascending
         word_users = (
             UserWordLink.query.filter(
                 UserWordLink.date >= starting_date, UserWordLink.date < tomorrows_date
@@ -72,6 +71,8 @@ def leaderboard_api():
 
 
 # find average of score for each user
+# takes in a list of SQL objects
+# returns a list of initials and average score
 def get_user_and_average(user_word_link_query):
     word_users = user_word_link_query
     user_guesses = {}
@@ -95,7 +96,6 @@ def get_user_and_average(user_word_link_query):
     return [array[0] for array in average_guesses_arr], [
         array[1] for array in average_guesses_arr
     ]
-
 
 @bp.route("/update_database", methods=["POST"])
 def update_database():
